@@ -1,0 +1,29 @@
+FROM ubuntu:18.04
+
+ENV FLASK_APP firegr.py
+
+ENV AWS_ACCESS_KEY_ID=
+
+ENV AWS_SECRET_ACCESS_KEY=
+
+ENV AWS_DEFAULT_REGION=ap-southeast-1
+
+RUN apt-get update && apt-get install -y python3 && apt-get install -y python3-pip && \
+    
+    pip3 install awscli && \
+
+    pip3 install flask
+
+WORKDIR ~/
+
+ADD ./firegroup.sh ./firegroup.sh
+
+ADD ./firegr.py ./firegr.py
+
+RUN chmod u+x ./firegroup.sh
+
+RUN chmod u+x ./firegr.py
+
+RUN bash firegroup.sh Firegr-ASG
+
+ENTRYPOINT ["python3", "firegr.py"]
